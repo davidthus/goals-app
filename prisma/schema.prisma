@@ -21,6 +21,6 @@ model Goal {
   goalId Int @id @default(autoincrement())
   title String @unique
   content String? 
-  deadline BigInt
+  deadline DateTime
   subtasks Subtask[]
 }

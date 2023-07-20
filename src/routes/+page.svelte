@@ -25,6 +25,9 @@
 			<div>
 				<a href={`/goal/${goal.goalId}`}>{goal.title}</a>
 				<p>{String(goal.deadline)}</p>
+				<form action="?/deleteGoal&id={goal.goalId}">
+					<button type="button">Delete</button>
+				</form>
 			</div>
 		{/each}
 	</section>

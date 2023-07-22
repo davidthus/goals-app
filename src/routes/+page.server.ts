@@ -8,17 +8,20 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions: Actions = {
-	createGoal: async ({ request }) => {
+	createGoal: async ({ request, url }) => {
 		const { title, content } = Object.fromEntries(await request.formData()) as {
 			title: string;
 			content: string;
 		};
+		const timeInMilliseconds = url.searchParams.get('deadline');
+		const deadline = new Date(Number(timeInMilliseconds));
 
 		try {
 			await prisma.goal.create({
 				data: {
 					title,
-					content
+					content,
+					deadline
 				}
 			});
 		} catch (err) {

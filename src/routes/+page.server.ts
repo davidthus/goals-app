@@ -3,7 +3,8 @@ import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
-	return { goals: prisma.goal.findMany() };
+	const goals = await prisma.goal.findMany();
+	return { goals };
 };
 
 export const actions: Actions = {
@@ -39,7 +40,7 @@ export const actions: Actions = {
 		try {
 			await prisma.goal.delete({
 				where: {
-					goalId: Number(id)
+					id: Number(id)
 				}
 			});
 		} catch (err) {

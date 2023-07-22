@@ -6,21 +6,22 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.sqlite"
-}
-
-model Subtask {
-  subtaskId Int @id @default(autoincrement())
-  title String @unique
-  isCompleted Boolean @default(false)
-  goal Goal @relation(fields: [subtaskId], references: [goalId])
+  provider = "mongodb"
+  url      = env("MONGODB_URI")
 }
 
 model Goal {
-  goalId Int @id @default(autoincrement())
+  id String @id @default(uuid()) @map("_id")
   title String @unique
   content String? 
   deadline DateTime
   subtasks Subtask[]
+}
+
+model Subtask {
+  id String @id @default(uuid()) @map("_id")
+  title String @unique
+  isCompleted Boolean @default(false)
+  goal Goal @relation(fields: [goalId], references: [id])
+  goalId String
 }

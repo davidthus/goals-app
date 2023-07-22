@@ -1,11 +1,11 @@
 import { prisma } from '$lib/server/prisma';
 import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from '../$types';
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const goal = await prisma.goal.findUnique({
 		where: {
-			goalId: Number(params.goalId)
+			id: Number(params.goalId)
 		}
 	});
 	if (!goal) {

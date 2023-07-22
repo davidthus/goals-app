@@ -6,18 +6,17 @@
 	$: ({ goal } = data);
 </script>
 
-<main>
+<form>
 	<h3>{goal.title}</h3>
 	{#if goal?.content}
 		<p>{goal.content}</p>
 	{/if}
 	<p>Deadline;</p>
-	<p>{String(goal.deadline)}</p>
 	<p>Subtasks:</p>
 	<ul>
-		{#each goal.subtasks as subtask (subtask.subtaskId)}
+		{#each goal.subtasks as subtask (subtask.id)}
 			<li>
-				<form method="post" action="?/toggleSubtask?id={subtask.subtaskId}">
+				<form method="POST" action="?/toggleSubtask&id={subtask.id}">
 					<label>
 						{subtask.title}
 						<input type="checkbox" name="subtask" value={subtask.isCompleted} />
@@ -26,4 +25,5 @@
 			</li>
 		{/each}
 	</ul>
-</main>
+	<button><a href={`/update/${goal.id}`}>Update Goal</a></button>
+</form>

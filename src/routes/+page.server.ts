@@ -43,7 +43,7 @@ export const actions: Actions = {
 		try {
 			await prisma.goal.delete({
 				where: {
-					id: Number(id)
+					id
 				}
 			});
 		} catch (err) {

@@ -1,18 +1,24 @@
 <script lang="ts">
-	import { DateInput } from 'date-picker-svelte';
+	import { enUS } from 'date-fns/locale';
+	import { DatePicker, localeFromDateFnsLocale } from 'date-picker-svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 
+	$: ({ goals } = data);
+
+	let dateFnsLocale = enUS;
+	$: locale = localeFromDateFnsLocale(dateFnsLocale);
+
+	const fiveYearsInMilliseconds = 157784630000;
+	const browseWithoutSelecting = false;
 	let date = new Date();
 	let min = new Date();
-	let max = new Date(Number(min.getTime) + 31556926000);
-
-	$: ({ goals } = data);
+	let max = new Date(Number(min.getTime()) + fiveYearsInMilliseconds);
 </script>
 
 <main>
-	<form action="?/createGoal&deadline={date.getTime()}" method="POST">
+	<form action="?/createGoal&deadline={date.getTime()}" method="POST" class="form">
 		<h2>Create a goal</h2>
 		<label>
 			Title:
@@ -22,28 +28,54 @@
 			Content:
 			<textarea rows={5} id="content" name="content" />
 		</label>
-		<label for="date">
+		<!-- svelte-ignore a11y-label-has-associated-control -->
+		<label>
 			Deadline:
-			<DateInput
-				bind:value={date}
-				{min}
-				{max}
-				format="yyyy/MM/dd HH:mm:ss"
-				placeholder={min.toLocaleString('en-GB', { timeZone: 'UTC' })}
-			/>
+			<DatePicker bind:value={date} {min} {max} {locale} {browseWithoutSelecting} />
 		</label>
 		<button type="submit">Add Goal</button>
 	</form>
-	<section>
+	<section class="goals_list">
 		<h2>Goals:</h2>
 		{#each goals as goal}
 			<div>
 				<a href={goal.id}>{goal.title}</a>
-				<p>{String(goal.deadline)}</p>
-				<form action="?/deleteGoal&id={goal.id}">
-					<button type="button">Delete</button>
+				<p>
+					{goal.deadline.toLocaleString('en-GB', {
+						weekday: 'long',
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric'
+					})}
+				</p>
+				<form action="?/deleteGoal&id={goal.id}" method="POST">
+					<button
+						type="button"
+						on:click={() => {
+							console.log('clicked');
+						}}>Delete</button
+					>
 				</form>
 			</div>
 		{/each}
 	</section>
 </main>
+
+<style>
+	.form {
+		display: flex;
+		flex-flow: column;
+		gap: 2rem;
+	}
+
+	label {
+		display: flex;
+		flex-flow: column;
+	}
+
+	.goals_list {
+		display: flex;
+		flex-flow: column;
+		gap: 2rem;
+	}
+</style>

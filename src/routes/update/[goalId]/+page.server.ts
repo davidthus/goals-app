@@ -5,7 +5,7 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ params }) => {
 	const goal = await prisma.goal.findUnique({
 		where: {
-			id: Number(params.goalId)
+			id: params.goalId
 		}
 	});
 	if (!goal) {

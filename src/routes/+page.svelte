@@ -1,17 +1,12 @@
 <script lang="ts">
-	import { enUS } from 'date-fns/locale';
-	import { DatePicker, localeFromDateFnsLocale } from 'date-picker-svelte';
+	import { browseWithoutSelecting, fiveYearsInMilliseconds, locale } from '$lib';
+	import { DatePicker } from 'date-picker-svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 
 	$: ({ goals } = data);
 
-	let dateFnsLocale = enUS;
-	$: locale = localeFromDateFnsLocale(dateFnsLocale);
-
-	const fiveYearsInMilliseconds = 157784630000;
-	const browseWithoutSelecting = false;
 	let date = new Date();
 	let min = new Date();
 	let max = new Date(Number(min.getTime()) + fiveYearsInMilliseconds);
@@ -49,12 +44,7 @@
 					})}
 				</p>
 				<form action="?/deleteGoal&id={goal.id}" method="POST">
-					<button
-						type="button"
-						on:click={() => {
-							console.log('clicked');
-						}}>Delete</button
-					>
+					<button type="submit">Delete</button>
 				</form>
 			</div>
 		{/each}

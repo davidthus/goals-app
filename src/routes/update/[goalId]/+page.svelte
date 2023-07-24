@@ -14,19 +14,24 @@
 	let max = new Date(Number(min.getTime()) + fiveYearsInMilliseconds);
 </script>
 
-<section>
-	<p>{goal.title}</p>
-	{#if goal?.content}
-		<p>{goal.content}</p>
-	{/if}
-	<p>
-		Due {goal.deadline.toLocaleString('en-GB', {
-			weekday: 'long',
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric'
-		})}
-	</p>
+<form>
+	<label for="title">
+		Title:
+		<input type="text" name="title" value={goal.title} />
+	</label>
+	<label for="title">
+		Content:
+		<textarea name="content" value={goal.title} cols={5} />
+	</label>
+	<p>Deadline:</p>
+	<DateInput
+		bind:value={date}
+		{min}
+		{max}
+		{locale}
+		format={formatString}
+		placeholder={formattedDate}
+	/>
 	{#if goal.subtasks}
 		<p>Subtasks:</p>
 		<ul>
@@ -43,4 +48,4 @@
 		</ul>
 	{/if}
 	<a href={`/update/${goal.id}`}>Update Goal</a>
-</section>
+</form>

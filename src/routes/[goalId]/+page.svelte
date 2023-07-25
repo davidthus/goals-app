@@ -1,46 +1,57 @@
 <script lang="ts">
-	import { format } from 'date-fns';
-	import { DateInput } from 'date-picker-svelte';
-	import { closeOnSelection, fiveYearsInMilliseconds, formatString, locale } from '../../lib/';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 
 	$: ({ goal } = data);
 
-	let date = goal.deadline;
-	let min = date;
-	const formattedDate = format(date, 'dd/MM/yyyy');
-	let max = new Date(Number(min.getTime()) + fiveYearsInMilliseconds);
+	$: console.log(goal);
 </script>
 
-<section>
-	<p>{goal.title}</p>
-	{#if goal?.content}
-		<p>{goal.content}</p>
-	{/if}
-	<p>
-		Due {goal.deadline.toLocaleString('en-GB', {
-			weekday: 'long',
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric'
-		})}
-	</p>
-	{#if goal.subtasks}
-		<p>Subtasks:</p>
-		<ul>
-			{#each goal.subtasks as subtask (subtask.id)}
-				<li>
-					<form method="POST" action="?/toggleSubtask&id={subtask.id}">
-						<label>
-							{subtask.title}
-							<input type="checkbox" name="subtask" value={subtask.isCompleted} />
-						</label>
-					</form>
-				</li>
-			{/each}
-		</ul>
-	{/if}
-	<a href={`/update/${goal.id}`}>Update Goal</a>
+<a href={`/update/${goal.id}`}>Go to update</a>
+<section class="goal">
+	<div>
+		<h2>{goal.title}</h2>
+		{#if goal?.content}
+			<p>{goal.content}</p>
+		{/if}
+		<p>
+			Due {goal.deadline.toLocaleString('en-GB', {
+				weekday: 'long',
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric'
+			})}
+		</p>
+	</div>
+	<div>
+		{#if goal.subtasks}
+			<p>Subtasks:</p>
+			<ul>
+				{#each goal.subtasks as subtask (subtask.id)}
+					<li>
+						<form method="POST" action="?/toggleSubtask&id={subtask.id}">
+							<label class="checkbox_group">
+								<input type="checkbox" name="subtask" value={subtask.isCompleted} />
+								{subtask.title}
+							</label>
+						</form>
+					</li>
+				{/each}
+			</ul>
+		{/if}
+	</div>
 </section>
+
+<style>
+	.goal {
+		display: flex;
+		justify-content: center;
+		gap: 2rem;
+	}
+
+	.checkbox_group {
+		display: flex;
+		gap: 2rem;
+	}
+</style>

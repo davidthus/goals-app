@@ -10,10 +10,16 @@
 	let date = new Date();
 	let min = new Date();
 	let max = new Date(Number(min.getTime()) + fiveYearsInMilliseconds);
+
+	let subtasks = [{ title: '' }, { title: '' }];
 </script>
 
 <main>
-	<form action="?/createGoal&deadline={date.getTime()}" method="POST" class="form">
+	<form
+		action="?/createGoal&deadline={date.getTime()}&subtasks={subtasks}"
+		method="POST"
+		class="form"
+	>
 		<h2>Create a goal</h2>
 		<label>
 			Title:
@@ -27,6 +33,30 @@
 		<label>
 			Deadline:
 			<DatePicker bind:value={date} {min} {max} {locale} {browseWithoutSelecting} />
+		</label>
+		<label>
+			Subtasks:
+			<ul>
+				{#each subtasks as subtask, i}
+					<li>
+						<input type="text" bind:value={subtask.title} />
+						<button
+							type="button"
+							on:click={() => {
+								subtasks = subtasks.filter((subtask, index) => {
+									return index === i ? false : true;
+								});
+							}}>X</button
+						>
+					</li>
+				{/each}
+			</ul>
+			<button
+				type="button"
+				on:click={() => {
+					subtasks = [...subtasks, { title: '' }];
+				}}>Add subtask</button
+			>
 		</label>
 		<button type="submit">Add Goal</button>
 	</form>

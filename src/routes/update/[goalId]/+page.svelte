@@ -1,7 +1,7 @@
 <script lang="ts">
+	import { closeOnSelection, fiveYearsInMilliseconds, formatString, locale } from '$lib';
 	import { format } from 'date-fns';
 	import { DateInput } from 'date-picker-svelte';
-	import { closeOnSelection, fiveYearsInMilliseconds, formatString, locale } from '../../lib/';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -29,6 +29,7 @@
 		{min}
 		{max}
 		{locale}
+		{closeOnSelection}
 		format={formatString}
 		placeholder={formattedDate}
 	/>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { prisma } from '$lib/server/prisma';
 import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
@@ -13,17 +14,31 @@ export const actions: Actions = {
 			title: string;
 			content: string;
 		};
-		const timeInMilliseconds = url.searchParams.get('deadline');
-		const deadline = new Date(Number(timeInMilliseconds));
+
+		const deadlineInMilliseconds = url.searchParams.get('deadline');
+		const deadline = new Date(Number(deadlineInMilliseconds));
+
+		const subtasks = (
+			url.searchParams.get('subtasks') !== null
+				? JSON.parse(url.searchParams.get('subtasks')!)
+				: url.searchParams.get('subtasks')
+		) as { title: string }[];
+
+		console.log(subtasks);
 
 		try {
-			await prisma.goal.create({
+			const goal = await prisma.goal.create({
 				data: {
 					title,
 					content,
 					deadline
 				}
 			});
+			const goalId = goal.id;
+
+			const subtasksArrayWithGoalId = subtasks.map((subtask) => ({ ...subtask, goalId }));
+
+			await prisma.subtask.create({ data: subtasksArrayWithGoalId });
 		} catch (err) {
 			console.error(err);
 			return fail(500, { message: 'Could not create the goal.' });

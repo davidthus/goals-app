@@ -14,51 +14,55 @@
 	let subtasks = [{ title: '' }, { title: '' }];
 </script>
 
-<main>
+<main class="container">
+	<h2>Create a goal</h2>
 	<form
-		action="?/createGoal&deadline={date.getTime()}&subtasks={subtasks}"
+		action="?/createGoal&deadline={date.getTime()}&subtasks={JSON.stringify(subtasks)}"
 		method="POST"
 		class="form"
 	>
-		<h2>Create a goal</h2>
-		<label>
-			Title:
-			<input type="text" id="title" name="title" />
-		</label>
-		<label>
-			Content:
-			<textarea rows={5} id="content" name="content" />
-		</label>
-		<!-- svelte-ignore a11y-label-has-associated-control -->
-		<label>
-			Deadline:
-			<DatePicker bind:value={date} {min} {max} {locale} {browseWithoutSelecting} />
-		</label>
-		<label>
-			Subtasks:
-			<ul>
-				{#each subtasks as subtask, i}
-					<li>
-						<input type="text" bind:value={subtask.title} />
-						<button
-							type="button"
-							on:click={() => {
-								subtasks = subtasks.filter((subtask, index) => {
-									return index === i ? false : true;
-								});
-							}}>X</button
-						>
-					</li>
-				{/each}
-			</ul>
-			<button
-				type="button"
-				on:click={() => {
-					subtasks = [...subtasks, { title: '' }];
-				}}>Add subtask</button
-			>
-		</label>
-		<button type="submit">Add Goal</button>
+		<div class="stack">
+			<label>
+				Title:
+				<input type="text" id="title" name="title" />
+			</label>
+			<label>
+				Content:
+				<textarea rows={5} id="content" name="content" />
+			</label>
+			<!-- svelte-ignore a11y-label-has-associated-control -->
+			<label>
+				Deadline:
+				<DatePicker bind:value={date} {min} {max} {locale} {browseWithoutSelecting} />
+			</label>
+		</div>
+		<div>
+			<label>
+				Subtasks:
+				<ul>
+					{#each subtasks as subtask, i}
+						<li>
+							<input type="text" bind:value={subtask.title} />
+							<button
+								type="button"
+								on:click={() => {
+									subtasks = subtasks.filter((subtask, index) => {
+										return index === i ? false : true;
+									});
+								}}>X</button
+							>
+						</li>
+					{/each}
+				</ul>
+				<button
+					type="button"
+					on:click={() => {
+						subtasks = [...subtasks, { title: '' }];
+					}}>Add subtask</button
+				>
+			</label>
+			<button type="submit">Add Goal</button>
+		</div>
 	</form>
 	<section class="goals_list">
 		<h2>Goals:</h2>
@@ -84,7 +88,8 @@
 <style>
 	.form {
 		display: flex;
-		flex-flow: column;
+		width: 100vw;
+		justify-content: space-around;
 		gap: 2rem;
 	}
 
@@ -97,5 +102,17 @@
 		display: flex;
 		flex-flow: column;
 		gap: 2rem;
+	}
+
+	.container {
+		display: flex;
+		flex-flow: column;
+		gap: 2rem;
+	}
+
+	.stack {
+		display: flex;
+		flex-flow: column;
+		gap: 1rem;
 	}
 </style>

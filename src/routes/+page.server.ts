@@ -38,7 +38,7 @@ export const actions: Actions = {
 
 			const subtasksArrayWithGoalId = subtasks.map((subtask) => ({ ...subtask, goalId }));
 
-			await prisma.subtask.create({ data: subtasksArrayWithGoalId });
+			await prisma.subtask.createMany({ data: subtasksArrayWithGoalId });
 		} catch (err) {
 			console.error(err);
 			return fail(500, { message: 'Could not create the goal.' });

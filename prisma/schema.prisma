@@ -22,6 +22,6 @@ model Subtask {
   id String @id @default(uuid()) @map("_id")
   title String @unique
   isCompleted Boolean @default(false)
-  goal Goal @relation(fields: [goalId], references: [id])
+  goal Goal @relation(fields: [goalId], references: [id], onDelete: Cascade)
   goalId String
 }

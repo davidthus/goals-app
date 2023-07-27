@@ -4,8 +4,6 @@
 	export let data: PageData;
 
 	$: ({ goal } = data);
-
-	$: console.log(goal);
 </script>
 
 <a href={`/update/${goal.id}`}>Go to update</a>

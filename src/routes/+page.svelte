@@ -27,7 +27,7 @@
 				<input type="text" id="title" name="title" />
 			</label>
 			<label>
-				Content:
+				Content (optional):
 				<textarea rows={5} id="content" name="content" />
 			</label>
 			<!-- svelte-ignore a11y-label-has-associated-control -->

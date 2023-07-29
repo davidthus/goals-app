@@ -3,30 +3,25 @@ import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
-	const goalQueryResult = await prisma.goal.findUnique({
+	const goal = await prisma.goal.findUnique({
 		where: {
-			id: params.goalId
+			id: params.id
 		}
 	});
 
-	if (!goalQueryResult) {
+	if (!goal) {
 		throw error(404, 'Goal not found');
 	}
 
-	let subtasks;
-	const subtasksQueryResult = await prisma.subtask.findMany({
+	const subtasks = await prisma.subtask.findMany({
 		where: {
-			goalId: goalQueryResult.goalId
+			goalId: goal.id
 		}
 	});
 
-	if (subtasksQueryResult) {
-		subtasks = subtasksQueryResult;
-	}
+	console.log(subtasks, goal);
 
-	console.log(subtasks, goalQueryResult);
-
-	return { goal: { ...goalQueryResult, subtasks } };
+	return { goal: { ...goal, subtasks } };
 };
 
 export const actions: Actions = {

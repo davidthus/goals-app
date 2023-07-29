@@ -64,25 +64,27 @@
 			<button type="submit">Add Goal</button>
 		</div>
 	</form>
-	<section class="goals_list">
-		<h2>Goals:</h2>
-		{#each goals as goal}
-			<div>
-				<a href={goal.id}>{goal.title}</a>
-				<p>
-					{goal.deadline.toLocaleString('en-GB', {
-						weekday: 'long',
-						year: 'numeric',
-						month: 'long',
-						day: 'numeric'
-					})}
-				</p>
-				<form action="?/deleteGoal&id={goal.id}" method="POST">
-					<button type="submit">Delete</button>
-				</form>
-			</div>
-		{/each}
-	</section>
+	{#if goals.length > 0}
+		<section class="goals_list">
+			<h2>Goals:</h2>
+			{#each goals as goal}
+				<div>
+					<a href={goal.id}>{goal.title}</a>
+					<p>
+						{goal.deadline.toLocaleString('en-GB', {
+							weekday: 'long',
+							year: 'numeric',
+							month: 'long',
+							day: 'numeric'
+						})}
+					</p>
+					<form action="?/deleteGoal&id={goal.id}" method="POST">
+						<button type="submit">Delete</button>
+					</form>
+				</div>
+			{/each}
+		</section>
+	{/if}
 </main>
 
 <style>

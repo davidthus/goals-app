@@ -1,6 +1,6 @@
 import { prisma } from '$lib/server/prisma';
-import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
+import { error, fail } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const goalQueryResult = await prisma.goal.findUnique({
@@ -24,5 +24,32 @@ export const load: PageServerLoad = async ({ params }) => {
 		subtasks = subtasksQueryResult;
 	}
 
+	console.log(subtasks, goalQueryResult);
+
 	return { goal: { ...goalQueryResult, subtasks } };
+};
+
+export const actions: Actions = {
+	toggleSubtask: async ({ url }) => {
+		const id = url.searchParams.get('id');
+
+		if (!id) {
+			return fail(400, { message: 'Invalid request' });
+		}
+
+		const subtask = await prisma.subtask.findUnique({ where: { id } });
+
+		if (!subtask) {
+			throw error(404, 'Subtask not found');
+		}
+
+		await prisma.subtask.update({
+			where: {
+				id
+			},
+			data: {
+				isCompleted: !subtask.isCompleted
+			}
+		});
+	}
 };

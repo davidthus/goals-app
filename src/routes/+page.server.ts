@@ -24,8 +24,6 @@ export const actions: Actions = {
 				: url.searchParams.get('subtasks')
 		) as { title: string }[];
 
-		console.log(subtasks);
-
 		try {
 			const goal = await prisma.goal.create({
 				data: {

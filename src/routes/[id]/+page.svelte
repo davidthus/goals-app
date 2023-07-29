@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { fly, slide } from 'svelte/transition';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 
 	$: ({ goal } = data);
-	$: console.log(1, goal, 2);
 
 	const formRefsArray =
 		goal && Array.isArray(goal.subtasks)
@@ -43,7 +41,7 @@
 							on:change={() => formRefsArray[i].requestSubmit()}
 							use:enhance
 						>
-							<label class="checkbox_group" in:fly={{ y: 20 }} out:slide>
+							<label class="checkbox_group">
 								<input type="checkbox" name="subtask" checked={subtask.isCompleted} />
 								{subtask.title}
 							</label>

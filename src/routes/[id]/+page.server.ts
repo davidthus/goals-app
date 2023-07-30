@@ -3,11 +3,12 @@ import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
-	const goal = await prisma.goal.findUnique({
-		where: {
-			id: params.id
-		}
-	});
+	const goal: { id: string; title: string; content: string; deadline: Date } =
+		await prisma.goal.findUnique({
+			where: {
+				id: params.id
+			}
+		});
 
 	if (!goal) {
 		throw error(404, 'Goal not found');

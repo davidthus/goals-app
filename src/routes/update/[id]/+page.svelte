@@ -12,14 +12,19 @@
 	let min = date;
 	const formattedDate = format(date, 'dd/MM/yyyy');
 	let max = new Date(Number(min.getTime()) + fiveYearsInMilliseconds);
+
+	let subtasks = goal.subtasks;
 </script>
 
-<form>
+<form
+	method="post"
+	action="?/updateGoal&deadline={date.getTime()}&subtasks={JSON.stringify(subtasks)}"
+>
 	<label for="title">
 		Title:
 		<input type="text" name="title" value={goal.title} />
 	</label>
-	<label for="title">
+	<label for="content">
 		Content:
 		<textarea name="content" value={goal.title} cols={5} />
 	</label>
@@ -36,14 +41,17 @@
 	{#if goal.subtasks}
 		<p>Subtasks:</p>
 		<ul>
-			{#each goal.subtasks as subtask (subtask.id)}
+			{#each subtasks as subtask, i}
 				<li>
-					<form method="POST" action="?/toggleSubtask&id={subtask.id}">
-						<label>
-							{subtask.title}
-							<input type="checkbox" name="subtask" value={subtask.isCompleted} />
-						</label>
-					</form>
+					<input type="text" bind:value={subtask.title} />
+					<button
+						type="button"
+						on:click={() => {
+							subtasks = subtasks.filter((subtask, index: number) => {
+								return index === i ? false : true;
+							});
+						}}>X</button
+					>
 				</li>
 			{/each}
 		</ul>

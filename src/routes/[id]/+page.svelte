@@ -6,10 +6,8 @@
 
 	$: ({ goal } = data);
 
-	const formRefsArray =
-		goal && Array.isArray(goal.subtasks)
-			? goal.subtasks.map(() => undefined as unknown | HTMLFormElement)
-			: [];
+	const formRefsArray: Array<HTMLFormElement | undefined> =
+		goal && Array.isArray(goal.subtasks) ? goal.subtasks.map(() => undefined) : [];
 </script>
 
 <a href={`/update/${goal.id}`}>Go to update</a>
@@ -38,7 +36,7 @@
 							method="POST"
 							action="?/toggleSubtask&id={subtask.id}"
 							bind:this={formRefsArray[i]}
-							on:change={() => formRefsArray[i].requestSubmit()}
+							on:change={() => formRefsArray[i]?.requestSubmit()}
 							use:enhance
 						>
 							<label class="checkbox_group">

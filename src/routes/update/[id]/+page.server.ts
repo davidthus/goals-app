@@ -20,8 +20,6 @@ export const load: PageServerLoad = async ({ params }) => {
 		}
 	});
 
-	console.log(subtasks, goal);
-
 	return { goal: { ...goal, subtasks } };
 };
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import { closeOnSelection, fiveYearsInMilliseconds, formatString, locale } from '$lib';
 	import { format } from 'date-fns';
 	import { DateInput } from 'date-picker-svelte';
@@ -14,11 +15,23 @@
 	let max = new Date(Number(min.getTime()) + fiveYearsInMilliseconds);
 
 	let subtasks = goal.subtasks;
+
+	const filterSubtasks = (i: number) => {
+		subtasks = goal.subtasks.filter(
+			(
+				subtask: { id: string; title: string; isCompleted: boolean; goalId: string },
+				index: number
+			) => {
+				return index === i ? false : true;
+			}
+		);
+	};
 </script>
 
 <form
 	method="post"
 	action="?/updateGoal&deadline={date.getTime()}&subtasks={JSON.stringify(subtasks)}"
+	use:enhance
 >
 	<label for="title">
 		Title:
@@ -44,17 +57,10 @@
 			{#each subtasks as subtask, i}
 				<li>
 					<input type="text" bind:value={subtask.title} />
-					<button
-						type="button"
-						on:click={() => {
-							subtasks = subtasks.filter((subtask, index: number) => {
-								return index === i ? false : true;
-							});
-						}}>X</button
-					>
+					<button type="button" on:click={() => filterSubtasks(i)}>X</button>
 				</li>
 			{/each}
 		</ul>
 	{/if}
-	<a href={`/update/${goal.id}`}>Update Goal</a>
+	<button type="submit">Update Goal</button>
 </form>

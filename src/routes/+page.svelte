@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import { browseWithoutSelecting, fiveYearsInMilliseconds, locale } from '$lib';
 	import { DatePicker } from 'date-picker-svelte';
 	import type { PageData } from './$types';
@@ -20,6 +21,7 @@
 		action="?/createGoal&deadline={date.getTime()}&subtasks={JSON.stringify(subtasks)}"
 		method="POST"
 		class="form"
+		use:enhance
 	>
 		<div class="stack">
 			<label>
@@ -78,7 +80,7 @@
 							day: 'numeric'
 						})}
 					</p>
-					<form action="?/deleteGoal&id={goal.id}" method="POST">
+					<form action="?/deleteGoal&id={goal.id}" method="POST" use:enhance>
 						<button type="submit">Delete</button>
 					</form>
 				</div>

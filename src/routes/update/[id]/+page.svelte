@@ -9,22 +9,21 @@
 
 	$: ({ goal } = data);
 
-	let date = goal.deadline;
-	let min = date;
-	const formattedDate = format(date, 'dd/MM/yyyy');
-	let max = new Date(Number(min.getTime()) + fiveYearsInMilliseconds);
+	$: date = goal.deadline;
+	$: min = date;
+	$: formattedDate = format(date, 'dd/MM/yyyy');
+	$: max = new Date(Number(min.getTime()) + fiveYearsInMilliseconds);
 
-	let subtasks = goal.subtasks;
+	$: subtasks = goal.subtasks;
 
 	const filterSubtasks = (i: number) => {
-		subtasks = goal.subtasks.filter(
-			(
-				subtask: { id: string; title: string; isCompleted: boolean; goalId: string },
-				index: number
-			) => {
-				return index === i ? false : true;
-			}
-		);
+		subtasks = goal.subtasks.filter((subtask: any, index: number) => {
+			return index === i ? false : true;
+		});
+	};
+
+	const addSubtask = () => {
+		subtasks = [...subtasks, { title: '' }];
 	};
 </script>
 
@@ -51,7 +50,7 @@
 		format={formatString}
 		placeholder={formattedDate}
 	/>
-	{#if goal.subtasks}
+	{#if subtasks}
 		<p>Subtasks:</p>
 		<ul>
 			{#each subtasks as subtask, i}
@@ -61,6 +60,7 @@
 				</li>
 			{/each}
 		</ul>
+		<button type="button" on:click={addSubtask}>Add subtask</button>
 	{/if}
 	<button type="submit">Update Goal</button>
 </form>

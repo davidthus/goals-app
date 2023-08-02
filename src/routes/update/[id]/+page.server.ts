@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { prisma } from '$lib/server/prisma';
-import { error, fail } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
@@ -29,7 +29,7 @@ export const actions: Actions = {
 			title: string;
 			content: string;
 		};
-		const id = url.searchParams.get('id');
+		const id = url.searchParams.get('id') as string;
 
 		const deadlineInMilliseconds = url.searchParams.get('deadline');
 		const deadline = new Date(Number(deadlineInMilliseconds));
@@ -56,6 +56,8 @@ export const actions: Actions = {
 			const subtasksArrayWithGoalId = subtasks.map((subtask) => ({ ...subtask, goalId }));
 
 			await prisma.subtask.updateMany({ where: { goalId }, data: subtasksArrayWithGoalId });
+
+			throw redirect(303, `/${id}`);
 		} catch (err) {
 			console.error(err);
 			return fail(500, { message: 'Could not update the goal.' });

@@ -17,6 +17,7 @@
 	$: subtasks = goal.subtasks;
 
 	const filterSubtasks = (i: number) => {
+		console.log(i);
 		subtasks = goal.subtasks.filter((subtask: any, index: number) => {
 			return index === i ? false : true;
 		});
@@ -25,6 +26,8 @@
 	const addSubtask = () => {
 		subtasks = [...subtasks, { title: '' }];
 	};
+
+	$: console.log(subtasks);
 </script>
 
 <form
@@ -55,7 +58,7 @@
 		<ul>
 			{#each subtasks as subtask, i}
 				<li>
-					<input type="text" bind:value={subtask.title} />
+					<input type="text" bind:value={subtasks[i].title} />
 					<button type="button" on:click={() => filterSubtasks(i)}>X</button>
 				</li>
 			{/each}

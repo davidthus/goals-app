@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import type { ISubtask } from '$lib';
 import { prisma } from '$lib/server/prisma';
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
@@ -31,6 +32,10 @@ export const actions: Actions = {
 		};
 		const id = url.searchParams.get('id') as string;
 
+		if (!id || id.trim() === '') {
+			return fail(400, { message: 'Invalid goal ID.' });
+		}
+
 		const deadlineInMilliseconds = url.searchParams.get('deadline');
 		const deadline = new Date(Number(deadlineInMilliseconds));
 
@@ -51,11 +56,30 @@ export const actions: Actions = {
 					deadline
 				}
 			});
+
 			const goalId = goal.id;
 
 			const subtasksArrayWithGoalId = subtasks.map((subtask) => ({ ...subtask, goalId }));
 
-			await prisma.subtask.updateMany({ where: { goalId }, data: subtasksArrayWithGoalId });
+			subtasksArrayWithGoalId.forEach(
+				async (subtask: ISubtask | { title: string; goalId: string }) => {
+					if ('id' in subtask) {
+						await prisma.subtask.update({
+							where: {
+								id: subtask.id
+							},
+							data: subtask
+						});
+					} else {
+						await prisma.subtask.create({
+							data: {
+								title: subtask.title,
+								goalId: subtask.goalId
+							}
+						});
+					}
+				}
+			);
 
 			throw redirect(303, `/${id}`);
 		} catch (err) {

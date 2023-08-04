@@ -15,6 +15,7 @@
 	$: max = new Date(Number(min.getTime()) + fiveYearsInMilliseconds);
 
 	$: subtasks = goal.subtasks;
+	console.log('wow');
 
 	const filterSubtasks = (i: number) => {
 		console.log(i);

@@ -18,6 +18,6 @@ export interface IGoal {
 	id: string;
 	title: string;
 	content: string;
-	deadline: string;
+	deadline: Date;
 	subtasks: ISubtask[];
 }

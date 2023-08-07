@@ -24,7 +24,7 @@
 	}
 
 	const date = writable(goal ? goal.deadline : new Date());
-	$: min = $date;
+	let min = new Date();
 	$: formattedDate = $date ? format($date, 'dd/MM/yyyy') : '';
 	$: max = new Date(Number(min.getTime()) + fiveYearsInMilliseconds);
 
@@ -33,6 +33,7 @@
 	const filterSubtasks = (i: number) => {
 		subtasks.update((prev) =>
 			prev.filter((subtask: any, index: number) => {
+				// returns false if its the correct element that needs be deleted
 				return index === i ? false : true;
 			})
 		);
@@ -48,7 +49,7 @@
 {#if goal}
 	<form
 		method="post"
-		action="?/updateGoal&deadline={$date.getTime()}&subtasks={JSON.stringify(subtasks)}"
+		action="?deadline={$date.getTime()}&subtasks={JSON.stringify(subtasks)}"
 		use:enhance
 	>
 		<label for="title">
@@ -57,7 +58,7 @@
 		</label>
 		<label for="content">
 			Content:
-			<textarea name="content" value={goal.title} cols={5} />
+			<textarea name="content" value={goal.content} cols={5} />
 		</label>
 		<p>Deadline:</p>
 		<DateInput

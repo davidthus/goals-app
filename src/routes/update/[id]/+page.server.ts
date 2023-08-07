@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { goto } from '$app/navigation';
 import type { ISubtask } from '$lib';
 import { prisma } from '$lib/server/prisma';
-import { error, fail } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 type subtaskArray = ISubtask | { title: string; goalId: string };
@@ -28,7 +27,7 @@ export const load: PageServerLoad = async ({ params }) => {
 };
 
 export const actions: Actions = {
-	updateGoal: async ({ request, url }) => {
+	default: async ({ request, url }) => {
 		const { title, content } = Object.fromEntries(await request.formData()) as {
 			title: string;
 			content: string;
@@ -82,7 +81,7 @@ export const actions: Actions = {
 				}
 			});
 
-			await goto(`/${id}`);
+			throw redirect(303, `/${id}`);
 		} catch (err) {
 			console.error(err);
 			return fail(500, { message: 'Could not update the goal.' });
